@@ -45,6 +45,7 @@ Don't believe in the quality of the mounting? [Here's a sound test](https://www.
 
 - 43 switches with MX footprint
 - 43 diodes
+- 2 2U plate mount stabilizers (optional)
 - 1 Pro Micro
 - A length of 3-5mm sealing strip with P profile
 - 8 M3 nuts and bolts
@@ -57,7 +58,7 @@ Don't believe in the quality of the mounting? [Here's a sound test](https://www.
 
 The keyboard comes in a number of parts, split up to fit on a regular home-size 3D printer with minimal supports. Depending on your printer it can be a good idea to print it with brims.
 
-- The top case parts are meant to be printed upside down, without supports.
+- The top case parts are meant to be printed upside down, with painted on supports for the pegs.
 - The bottom case parts are meant to be printed right side up.
 - Take an extra look at the plate parts to find their correct orientations. No supports should be needed here.
 
@@ -65,7 +66,7 @@ Join the parts with CA glue, using the pegs as guides. This will produce a full 
 
 ### Wiring
 
-Notice the folded key at the bottom of the grid
+Notice the folded key at the bottom of the grid.
 
 ![Wiring Diagram](./KCE-Batoid_Wiring-Diagram.jpg)
 
@@ -83,7 +84,7 @@ The plate is sandwiched between the top and bottom. In the top, there are 8 pegs
 
 ### Sticker
 
-On the back is a space for a sticker, found in the `/print` folder. If you decide to print it, make sure write the date you finished the build in the "controlled" field. Preferrably with a ballpoint pen, or thin sharpie, to match the vintage look.
+On the back is a space for a sticker, found in the `/print` folder. If you decide to print it, make sure to write the date you finished the build in the "controlled" field. Preferrably with a ballpoint pen, or thin sharpie, to match the vintage look.
 
 ![Sticker](./print/KCE-Batoid_sticker.png)
 
@@ -101,7 +102,7 @@ The keyboard has thre mappings:
 
 ### The easy way
 
-Just flash the built VIA hex file, and enjoy.
+Just flash the built VIA hex file, and enjoy. The mapping is messed up by default, but let's face it, you're not using VIA for the default mappings.
 
 ### WARNING (+ Erland mod)
 
