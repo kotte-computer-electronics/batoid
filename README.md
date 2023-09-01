@@ -14,7 +14,7 @@ The two built in LED indicators conveniently show what side of the keyboard you 
 
 The bottom row features one extra key, this gives you the opportunity to add an easily accessible extra modifier.
 
-The case is held together with M3 nuts and bolts, and the 3D-printed plate is mounted with a 3-5mm sealing strip, giving you a comfortable, bouncy typing experience with materials found at your local hardware store.
+The case is held together with M3 nuts and bolts, and the 3D-printed plate is mounted with a 3-5mm sealing strip, giving you a comfortable, soft typing experience with materials found at your local hardware store.
 
 The Kotte Computer Electronics Batoid allows you to maximize your productivity and enjoyment, at work and home.
 
