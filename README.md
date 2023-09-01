@@ -24,6 +24,10 @@ I've wanted an Alice-like 40's board for quite a while, so when @theerland on th
 
 The name Batoid comes from the fact that it looks a bit like a member of the batoidea family of fish. [Here's one I met a couple of years ago](./kotte-with-batoid.png). It's pretty happy, and blinks it's eyes when you type - a feature that is completely useless, but cute as shit.
 
+## Sound test
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9PGgU88DhRI?si=K-Qz95QSUkS9y2qA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## Some more beautyshots, by Erland
 
 ![Beauty Shot 1](./beauty-1.jpg)
