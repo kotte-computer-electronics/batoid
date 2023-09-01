@@ -30,7 +30,7 @@ The keyboard looks pretty happy, and blinks it's eyes when you type - a feature 
 
 Don't believe in the quality of the mounting? [Here's a sound test](https://www.youtube.com/watch?v=9PGgU88DhRI).
 
-## Some more beautyshots, by Erland
+## Some more glam shots, by Erland
 
 ![Beauty Shot 1](./beauty-1.jpg)
 ![Beauty Shot 2](./beauty-2.jpg)
