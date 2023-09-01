@@ -26,7 +26,7 @@ The name Batoid comes from the fact that it looks a bit like a member of the bat
 
 ## Sound test
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9PGgU88DhRI?si=K-Qz95QSUkS9y2qA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+Don't believe in the quality of the mounting? [Here's a sound test](https://www.youtube.com/watch?v=9PGgU88DhRI).
 
 ## Some more beautyshots, by Erland
 
