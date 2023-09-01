@@ -78,7 +78,7 @@ The plate rests on a ledge, on top of self-adhesive sealing strip. This might so
 
 ### Building the case
 
-The plate is sandwiched between the top and bottom. In the top, there are 8 pegs with slots for M3 bolts. These can be friction fit, but a small dab of CA glue can provide extra security. Make sure to insert the bolts with a point forwards, matching the slots shape:
+The plate is sandwiched between the top and bottom. In the top, there are 8 legs with slots for M3 bolts. These can be friction fit, but a small dab of CA glue can provide extra security. Make sure to insert the bolts with a point forwards, matching the slots shape:
 
 ![Slot Shape](./KCE-Batoid_slot.png)
 
