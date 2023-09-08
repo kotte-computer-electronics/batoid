@@ -98,11 +98,10 @@ The keyboard has thre mappings:
 
 - default: based on Corne, but taking the extra key into account. I don't really use a standard international mapping, so it might be weird.
 - swekce: the default mapping that I use on most of my keyboards. it's higly personal, and features ÅÄÖ bc sweden.
-- via: a mapping done by my friend Erland of mine that allows for VIA. It's messed up by default, but let's face it, you're not using VIA for the default mappings.
 
 ### The easy way
 
-Just flash the built VIA hex file, and enjoy. The mapping is messed up by default, but let's face it, you're not using VIA for the default mappings.
+My friend Erland hacked together a hex file that that allows for VIA. Just flash the built file (), and enjoy. It's messed up by default, but let's face it, you're not using VIA for the default mappings.
 
 ### WARNING (+ Erland mod)
 

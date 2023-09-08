@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //   |               |         |         |         |         |         |       |         |         |         |         |         |         |
         //┌─────────────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┐  └────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┐
         //|             |         |         |         |         |         |         |       |         |         |         |         |         |         |
-           KC_LSFT,      KC_LCTL   KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_ESC,
+           KC_LSFT,      KC_LCTL,   KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,             KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_ESC,
         //|             |         |         |         |         |         |         |       |         |         |         |
         //└────┬────────┴────┬────┴─────────┴─┬───────┴────┬────┴─────────┴────┬────┘ ┌─────┴─────────┴────┬────┴────┬────┴─────────┼─────────┴────┬────┘
         //     |             |                |            |                   |      |                    |         |              |              |
@@ -76,11 +76,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //       |         |         |         |         |         |         |       |         |         |         |         |         |         |
         //   ┌───┴─────────┴─┬───────┴─┬───────┴─┬───────┴─┬───────┴─┬───────┴─┐     └─┬───────┴─┬───────┴─┬───────┴─┬───────┴─┬───────┴─┬───────┴─┐
         //   |               |         |         |         |         |         |       |         |         |         |         |         |         |
-              XXXXXXX,        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,          XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX   XXXXXXX,
+              XXXXXXX,        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,          XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,
         //   |               |         |         |         |         |         |       |         |         |         |         |         |         |
         //┌─────────────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┐  └────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┐
         //|             |         |         |         |         |         |         |       |         |         |         |         |         |         |
-            XXXXXXX,     XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,          XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX   XXXXXXX,
+            XXXXXXX,     XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,          XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,
         //|             |         |         |         |         |         |         |       |         |         |         |         |         |         |
         //└────┬────────┴────┬────┴─────────┴─┬───────┴────┬────┴─────────┴────┬────┘ ┌─────┴─────────┴────┬────┴────┬────┴─────────┼─────────┴────┬────┘
         //     |             |                |            |                   |      |                    |         |              |              |
@@ -95,75 +95,134 @@ void reset_leds(void) {
     writePinLow(LED_PIN_R);
 }
 
-void keyboard_post_init_user(void) {
-    setPinOutput(LED_PIN_L);
-    setPinOutput(LED_PIN_R);
+bool is_standard_led_mode      = true;
+bool is_mod_led_active         = false;
 
-    reset_leds();
+bool is_playing_turbo_animation    = false;
+int current_turbo_animation_frame = 0;
+static uint16_t turbo_animation_frame_timer;
+
+void run_turbo_animation(void) {
+    if (is_playing_turbo_animation) {
+        if (timer_elapsed(turbo_animation_frame_timer) > 100) {
+            if (current_turbo_animation_frame >= 6) {
+                current_turbo_animation_frame = 1;
+            } else {
+                current_turbo_animation_frame++;
+            }
+            // reset timer
+            turbo_animation_frame_timer = timer_read();
+        }
+
+        reset_leds();
+
+        switch (current_turbo_animation_frame) {
+            case 0:
+                if (!is_mod_led_active) reset_leds();
+                break;
+            case 1:
+            case 3:
+            case 5:
+                writePinHigh(LED_PIN_L);
+                writePinLow(LED_PIN_R);
+                break;
+            case 2:
+            case 4:
+            case 6:
+                writePinHigh(LED_PIN_R);
+                writePinLow(LED_PIN_L);
+                break;
+        }
+    } else {
+        current_turbo_animation_frame = 0;
+    }
 }
 
-bool is_standard_led_mode = true;
-bool is_mod_led_active = false;
-bool is_playing_turbo_animation = false;
+bool is_playing_idle_animation = true;
+int current_idle_animation_frame = 0;
+static uint16_t idle_animation_frame_timer;
+static uint16_t idle_animation_start_timer;
 
-int  pressed_keys = 0;
+void run_idle_animation_timer(void) {
+    if (idle_animation_start_timer && timer_expired(timer_read(), idle_animation_start_timer)) {
+        is_playing_idle_animation = true;
+        idle_animation_start_timer = 0;
+    }
+}
+
+void run_idle_animation(void) {
+    if (is_playing_idle_animation) {
+        is_standard_led_mode      = false;
+        is_playing_turbo_animation = false;
+
+        if (timer_elapsed(idle_animation_frame_timer) > 80) {
+            if (current_idle_animation_frame >= 300) {
+                current_idle_animation_frame = 1;
+            } else {
+                current_idle_animation_frame++;
+            }
+
+            idle_animation_frame_timer = timer_read();
+        }
+        reset_leds();
+
+        switch (current_idle_animation_frame) {
+            case 0:
+                if (!is_mod_led_active) reset_leds();
+                break;
+            case 21:
+            case 51:
+            case 53:
+                writePinHigh(LED_PIN_L);
+                writePinHigh(LED_PIN_R);
+                break;
+            case 22:
+            case 52:
+            case 54:
+                writePinLow(LED_PIN_L);
+                writePinLow(LED_PIN_R);
+        }
+    } else {
+        current_idle_animation_frame = 0;
+    }
+}
+
+int pressed_keys = 0;
+int active_led   = LED_PIN_L;
 
 void handle_pressed_led(void) {
     if (is_standard_led_mode) {
         if (pressed_keys > 0) {
-            writePinHigh(LED_PIN_L);
-            writePinHigh(LED_PIN_R);
+            writePinHigh(active_led);
         } else {
             writePinLow(LED_PIN_L);
             writePinLow(LED_PIN_R);
-
         }
     }
-}
-
-int turbo_counter = 0;
-static uint16_t turbo_timer;
-
-void run_turbo_animation (void) {
-    if (is_playing_turbo_animation) {
-        if (timer_elapsed(turbo_timer) > 100) {
-            if (turbo_counter >= 6) {
-                turbo_counter = 1;
-            } else {
-                turbo_counter++;
-            }
-            turbo_timer = timer_read();
-        }
-
-        reset_leds();
-    } else {
-        turbo_counter = 0;
-    }
-
-    switch (turbo_counter) {
-        case 0:
-            if (!is_mod_led_active) reset_leds();
-            break;
-        case 1:
-        case 3:
-        case 5:
-            writePinHigh(LED_PIN_L);
-            break;
-        case 2:
-        case 4:
-        case 6:
-            writePinHigh(LED_PIN_R);
-            break;
-    }
-}
-
-void matrix_scan_user(void) {
-    run_turbo_animation();
-    handle_pressed_led();
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     bool pressed = record->event.pressed;
+
+    if (pressed) {
+        is_playing_idle_animation = false;
+        is_standard_led_mode      = true;
+    }
+
+    if (get_current_wpm() > 70) {
+        is_playing_turbo_animation = true;
+        is_standard_led_mode       = false;
+        is_playing_idle_animation  = false;
+    }
+
+    if (is_standard_led_mode) {
+        if (record->event.key.col > 5) {
+            active_led = LED_PIN_L;
+        } else {
+            active_led = LED_PIN_R;
+        }
+    }
+
 
     if (pressed) {
         pressed_keys++;
@@ -173,19 +232,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (pressed_keys < 0) pressed_keys = 0;
 
-    if (get_current_wpm() > 50) {
-        is_playing_turbo_animation = true;
-        is_standard_led_mode       = false;
-    } else {
-        is_playing_turbo_animation = false;
-        is_standard_led_mode       = true;
-    }
+    idle_animation_start_timer = (record->event.time + 1000) | 1;
 
     return true;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    switch(biton32(state)) {
+    switch (biton32(state)) {
         case _LWR:
             is_mod_led_active = true;
             pressed_keys--;
@@ -207,18 +260,25 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             writePinLow(LED_PIN_R);
             break;
 
-        case _MOU:
-            is_mod_led_active = true;
-            pressed_keys--;
-            writePinHigh(LED_PIN_L);
-            writePinHigh(LED_PIN_R);
-            break;
-
         default:
             is_mod_led_active = false;
             writePinLow(LED_PIN_L);
             writePinLow(LED_PIN_R);
             break;
-  }
-  return state;
+    }
+    return state;
+}
+
+void keyboard_post_init_user(void) {
+    setPinOutput(LED_PIN_L);
+    setPinOutput(LED_PIN_R);
+
+    reset_leds();
+}
+
+void matrix_scan_user(void) {
+    run_turbo_animation();
+    run_idle_animation_timer();
+    run_idle_animation();
+    handle_pressed_led();
 }

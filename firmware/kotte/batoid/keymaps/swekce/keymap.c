@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //   |               |         |         |         |         |         |       |         |         |         |         |         |         |
         //┌─────────────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┐  └────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┬────┴────┐
         //|             |         |         |         |         |         |         |       |         |         |         |         |         |         |
-           _______,      XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  K_BSLS,           SE_SLSH,  SE_SCLN,  SE_COLN,  SE_UNDS,  XXXXXXX,  _______,
+           _______,      XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,          K_BSLS,   SE_SLSH,  SE_SCLN,  SE_COLN,  SE_UNDS,  _______,
         //|             |         |         |         |         |         |         |       |         |         |         |
         //└────┬────────┴────┬────┴─────────┴─┬───────┴────┬────┴─────────┴────┬────┘ ┌─────┴─────────┴────┬────┴────┬────┴─────────┼─────────┴────┬────┘
         //     |             |                |            |                   |      |                    |         |              |              |
@@ -125,24 +125,26 @@ void run_turbo_animation(void) {
         }
 
         reset_leds();
+
+        switch (current_turbo_animation_frame) {
+            case 0:
+                if (!is_mod_led_active) reset_leds();
+                break;
+            case 1:
+            case 3:
+            case 5:
+                writePinHigh(LED_PIN_L);
+                writePinLow(LED_PIN_R);
+                break;
+            case 2:
+            case 4:
+            case 6:
+                writePinHigh(LED_PIN_R);
+                writePinLow(LED_PIN_L);
+                break;
+        }
     } else {
         current_turbo_animation_frame = 0;
-    }
-
-    switch (current_turbo_animation_frame) {
-        case 0:
-            if (!is_mod_led_active) reset_leds();
-            break;
-        case 1:
-        case 3:
-        case 5:
-            writePinHigh(LED_PIN_L);
-            break;
-        case 2:
-        case 4:
-        case 6:
-            writePinHigh(LED_PIN_R);
-            break;
     }
 }
 
@@ -152,50 +154,46 @@ static uint16_t idle_animation_frame_timer;
 static uint16_t idle_animation_start_timer;
 
 void run_idle_animation_timer(void) {
-    if (!is_playing_idle_animation) {
-        if (timer_elapsed(idle_animation_start_timer) > 300) {
-            is_playing_idle_animation = true;
-        } else {
-            is_playing_idle_animation = false;
-        }
+    if (idle_animation_start_timer && timer_expired(timer_read(), idle_animation_start_timer)) {
+        is_playing_idle_animation = true;
+        idle_animation_start_timer = 0;
     }
-}
-
-void reset_idle_animation_start_timer(void) {
-    idle_animation_start_timer = timer_read();
 }
 
 void run_idle_animation(void) {
     if (is_playing_idle_animation) {
-        if (timer_elapsed(idle_animation_frame_timer) > 100) {
-            if (current_idle_animation_frame >= 6) {
+        is_standard_led_mode      = false;
+        is_playing_turbo_animation = false;
+
+        if (timer_elapsed(idle_animation_frame_timer) > 80) {
+            if (current_idle_animation_frame >= 200) {
                 current_idle_animation_frame = 1;
             } else {
                 current_idle_animation_frame++;
             }
-            // reset timer
+
             idle_animation_frame_timer = timer_read();
         }
-
         reset_leds();
+
+        switch (current_idle_animation_frame) {
+            case 0:
+                if (!is_mod_led_active) reset_leds();
+                break;
+            case 21:
+            case 51:
+            case 53:
+                writePinHigh(LED_PIN_L);
+                writePinHigh(LED_PIN_R);
+                break;
+            case 22:
+            case 52:
+            case 54:
+                writePinLow(LED_PIN_L);
+                writePinLow(LED_PIN_R);
+        }
     } else {
         current_idle_animation_frame = 0;
-    }
-
-    switch (current_idle_animation_frame) {
-        case 0:
-            if (!is_mod_led_active) reset_leds();
-            break;
-        case 1:
-        case 3:
-        case 5:
-            writePinHigh(LED_PIN_L);
-            break;
-        case 2:
-        case 4:
-        case 6:
-            writePinHigh(LED_PIN_R);
-            break;
     }
 }
 
@@ -216,11 +214,25 @@ void handle_pressed_led(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     bool pressed = record->event.pressed;
 
-    if (record->event.key.col > 5) {
-        active_led = LED_PIN_L;
-    } else {
-        active_led = LED_PIN_R;
+    if (pressed) {
+        is_playing_idle_animation = false;
+        is_standard_led_mode      = true;
     }
+
+    if (get_current_wpm() > 70) {
+        is_playing_turbo_animation = true;
+        is_standard_led_mode       = false;
+        is_playing_idle_animation  = false;
+    }
+
+    if (is_standard_led_mode) {
+        if (record->event.key.col > 5) {
+            active_led = LED_PIN_L;
+        } else {
+            active_led = LED_PIN_R;
+        }
+    }
+
 
     if (pressed) {
         pressed_keys++;
@@ -230,13 +242,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (pressed_keys < 0) pressed_keys = 0;
 
-    if (get_current_wpm() > 50) {
-        is_playing_turbo_animation = true;
-        is_standard_led_mode       = false;
-    } else {
-        is_playing_turbo_animation = false;
-        is_standard_led_mode       = true;
-    }
+    idle_animation_start_timer = (record->event.time + 1000) | 1;
 
     return true;
 }
@@ -349,7 +355,7 @@ void keyboard_post_init_user(void) {
 
 void matrix_scan_user(void) {
     run_turbo_animation();
-    //run_idle_animation_timer();
+    run_idle_animation_timer();
     run_idle_animation();
     handle_pressed_led();
 }
