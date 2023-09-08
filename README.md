@@ -22,7 +22,7 @@ The Kotte Computer Electronics Batoid allows you to maximize your productivity a
 
 I've wanted an Alice-like 40's board for quite a while, so when @theerland on the Swedish MK-Discord server said he wanted one too, inspiration struck.
 
-The name Batoid comes from the fact that it looks a bit like a member of the batoidea family of fish. [Here's one I met a couple of years ago](./kotte-with-batoid.png).
+The name Batoid comes from the fact that it looks a bit like a member of the batoidea ~family~ superorder of fish (thanks to [KBD news](https://kbd.news/Batoid-2112.html) for the correction). [Here's one I met a couple of years ago](./kotte-with-batoid.png). 
 
 The keyboard looks pretty happy, and blinks it's eyes when you type - a feature that is completely useless, but cute as shit.
 
