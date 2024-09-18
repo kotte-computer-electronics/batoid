@@ -22,7 +22,7 @@ The Kotte Computer Electronics Batoid allows you to maximize your productivity a
 
 I've wanted an Alice-like 40's board for quite a while, so when @theerland on the Swedish MK-Discord server said he wanted one too, inspiration struck.
 
-The name Batoid comes from the fact that it looks a bit like a member of the batoidea ~family~ superorder of fish (thanks to [KBD news](https://kbd.news/Batoid-2112.html) for the correction). [Here's one I met a couple of years ago](./kotte-with-batoid.png). 
+The name Batoid comes from the fact that it looks a bit like a member of the batoidea ~family~ superorder of fish (thanks to [KBD news](https://kbd.news/Batoid-2112.html) for the correction). [Here's one I met a couple of years ago](./kotte-with-batoid.png).
 
 The keyboard looks pretty happy, and blinks it's eyes when you type - a feature that is completely useless, but cute as shit.
 
@@ -61,6 +61,7 @@ The keyboard comes in a number of parts, split up to fit on a regular home-size 
 - The top case parts are meant to be printed upside down, with painted on supports for the pegs.
 - The bottom case parts are meant to be printed right side up.
 - Take an extra look at the plate parts to find their correct orientations. No supports should be needed here.
+- Note that there is two Bottom Center Back parts. You only need to print one. Note that the RP2040 Pro Micro is USB-C and has the port "sunk" into the pcb rather than just siting on top of it.
 
 Join the parts with CA glue, using the pegs as guides. This will produce a full top, bottom and plate.
 
